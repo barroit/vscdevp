@@ -11,6 +11,7 @@ input += $(wildcard cmd/*.js helper/*.js helper.patch/*.js)
 
 profile := --platform=node --format=esm
 extern  := --external:vscode
+define  := --define:NULL=null
 
 .PHONY: install uninstall publish
 
@@ -21,7 +22,8 @@ $(prefix):
 
 $(prefix)/$(bundle)1: $(input) | $(prefix)
 	trap 'rm -f $@.$$$$' EXIT && \
-	esbuild $(profile) --bundle --sourcemap $(extern) $< >$@.$$$$ && \
+	esbuild $(profile) --bundle --sourcemap \
+		$(define) $(extern) $< >$@.$$$$ && \
 	mv $@.$$$$ $@
 
 $(prefix)/$(bundle): $(prefix)/$(bundle)1

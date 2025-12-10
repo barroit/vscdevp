@@ -3,12 +3,16 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { execFileSync as node_exec } from 'node:child_process'
+import { spawnSync as node_spawn } from 'node:child_process'
 
 import wspath from './wspath.js'
 
-export function exec(file, ...args)
+export function execlp(file, ...args)
 {
-	args.shift()
-	return node_exec(file, args, { cwd: wspath, encoding: 'utf8' })
+	args.pop()
+
+	const argv0 = args.shift()
+	const config = { ...this, argv0, cwd: wspath, encoding: 'utf8' }
+
+	return node_spawn(file, args, config)
 }
