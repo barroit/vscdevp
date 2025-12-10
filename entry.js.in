@@ -25,10 +25,7 @@ export async function activate(ctx)
 		const [ module_promise, cb ] = cmds[id]
 		const module = await module_promise
 
-		const exec = cb(`NAME.${id}`, module.exec, {
-			ctx,
-			config,
-		})
+		const exec = cb(`NAME.${id}`, module.exec, { ctx, config })
 
 		ctx.subscriptions.push(exec)
 	}
