@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/*
+ * Copyright 2025 Jiamu Sun <barroit@linux.com>
+ */
+
+import { commands, workspace } from 'vscode'
+
+const {
+	registerCommand: cmd,
+	registerTextEditorCommand: editor_cmd
+} = commands
+
+const { getConfiguration: config_of } = workspace
+
+const cmds = {
+	'': [ import('./cmd/.js'), cmd        ],
+	'': [ import('./cmd/.js'), editor_cmd ],
+}
+
+export async function activate(ctx)
+{
+	const config = config_of('NAME')
+
+	for (const id of Object.keys(cmds)) {
+		const [ module_promise, cb ] = cmds[id]
+		const module = await module_promise
+
+		const exec = cb(`NAME.${id}`, module.exec, {
+			ctx,
+			config,
+		})
+
+		ctx.subscriptions.push(exec)
+	}
+}
