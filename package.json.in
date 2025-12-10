@@ -18,9 +18,6 @@
       "type": "git",
       "url": "git+ssh://REMOTE"
    },
-   "enabledApiProposals": [
-      "extensionRuntime"
-   ],
    "contributes": {
       "commands": [
          {
