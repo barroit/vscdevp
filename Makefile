@@ -17,10 +17,12 @@ define  := --define:NULL=null
 
 install:
 
+-include patch.mak
+
 $(prefix):
 	mkdir -p $@
 
-$(prefix)/$(bundle)1: $(input) | $(prefix)
+$(prefix)/$(bundle)1: $(input) $(prebundle) | $(prefix)
 	trap 'rm -f $@.$$$$' EXIT && \
 	esbuild $(profile) --bundle --sourcemap \
 		$(define) $(extern) $< >$@.$$$$ && \
