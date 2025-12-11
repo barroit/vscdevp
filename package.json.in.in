@@ -19,42 +19,20 @@
       "url": "git+ssh://REMOTE"
    },
    "contributes": {
-      "commands": [
-         {
-            "command": "",
-            "title": "",
-            "category": "",
-            "enablement": ""
-         }
-      ],
       "configuration": {
-         "title": "",
          "type": "object",
          "properties": {
-            "": {}
+includ[[]]e(`package/config.json')dn[[]]l
          }
       },
+      "commands": [
+includ[[]]e(`package/cmd.json')dn[[]]l
+      ],
       "menus": {
-         "editor/context": [
-            {
-               "submenu": "",
-               "group": "",
-               "when": ""
-            }
-         ],
-         "": [
-            {
-               "command": "",
-               "group": "",
-               "when": ""
-            }
-         ]
+includ[[]]e(`package/menu.json')dn[[]]l
       },
       "submenus": [
-         {
-            "id": "",
-            "label": ""
-         }
+includ[[]]e(`package/submenu.json')dn[[]]l
       ]
    }
 }

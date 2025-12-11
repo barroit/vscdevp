@@ -12,6 +12,9 @@ cp ../vscdevp/LICENSES/* LICENSES
 mkdir -p image
 cp ../vscdevp/image/* image
 
+mkdir -p package
+cp ../vscdevp/package/* package
+
 ln -sf ../vscdevp/helper
 ln -sf ../vscdevp/Makefile
 
@@ -41,7 +44,7 @@ while read file; do
 	m4 .tmp-$$.m4 ../vscdevp/$file.in >$file
 
 done <<-'EOF'
-	package.json
+	package.json.in
 	entry.js
 EOF
 

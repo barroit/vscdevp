@@ -5,6 +5,8 @@
 
 import { commands, workspace } from 'vscode'
 
+import { sanitize_ctx } from './helper/vsc.js'
+
 const {
 	registerCommand: cmd,
 	registerTextEditorCommand: editor_cmd
@@ -25,8 +27,10 @@ export async function activate(ctx)
 		const [ module_promise, cb ] = cmds[id]
 		const module = await module_promise
 
-		const exec = cb(`NAME.${id}`, module.exec, { ctx, config })
+		const cmd_ctx = sanitize_ctx(ctx)
+		const exec = cb(`NAME.${id}`, module.exec, cmd_ctx)
 
+		cmd_ctx.config = config
 		ctx.subscriptions.push(exec)
 	}
 }
