@@ -3,7 +3,7 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-export function sanitize_ctx(ctx)
+export function map_ctx(ctx)
 {
 	return {
 		environ: ctx.environmentVariableCollection,
