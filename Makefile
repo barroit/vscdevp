@@ -2,6 +2,8 @@
 
 name := $(shell head -n1 README)
 
+npm ?= pnpm
+
 prefix := build
 bundle := entry.js
 vsix   := $(name).vsix
@@ -9,12 +11,18 @@ vsix   := $(name).vsix
 input := entry.js
 input += $(wildcard cmd/*.js helper/*.js helper.patch/*.js)
 
+module-prefix := node_modules
+
 package       := package.json
 package-input := $(wildcard package/*.json)
 
 profile := --platform=node --format=esm
 extern  := --external:vscode
 define  := --define:NULL=null
+
+ifneq ($(resize),)
+	resize := -terser
+endif
 
 .PHONY: install uninstall publish
 
@@ -31,7 +39,12 @@ $(prefix)/$(bundle)1: $(input) $(prebundle) | $(prefix)
 		$(define) $(extern) $< >$@.$$$$ && \
 	mv $@.$$$$ $@
 
-$(prefix)/$(bundle): $(prefix)/$(bundle)1
+$(prefix)/$(bundle)1-terser: $(prefix)/$(bundle)1
+	terser --module --ecma 2020 \
+	       --compress 'passes=3,pure_getters=true,unsafe=true' \
+	       --mangle --comments false <$< >$@
+
+$(prefix)/$(bundle): $(prefix)/$(bundle)1$(resize)
 	head -n1 entry.js >$@
 	printf '\n' >>$@
 	cat $< >>$@
