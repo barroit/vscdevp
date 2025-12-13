@@ -64,3 +64,12 @@ uninstall:
 
 publish: $(prefix)/$(vsix)
 	vsce publish --skip-license
+
+.PHONY: clean $(clean-prebundle) distclean $(distclean-prebundle)
+
+clean: $(clean-prebundle)
+	rm -f $(prefix)/$(vsix) $(prefix)/$(bundle)*
+
+distclean: clean $(distclean-prebundle)
+	rm -f $(package)
+	rm -rf $(prefix) $(module-prefix)
