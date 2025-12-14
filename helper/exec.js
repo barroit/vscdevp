@@ -11,8 +11,14 @@ export function execlp(file, ...args)
 {
 	args.pop()
 
-	const argv0 = args.shift()
-	const config = { ...this, argv0, cwd: wspath, encoding: 'utf8' }
+	const arg0 = args.shift()
+	const config = {
+		...this,
+		argv0:    arg0,
+		cwd:      wspath,
+		encoding: 'utf8',
+		shell:    true,
+	}
 
 	return node_spawn(file, args, config)
 }
