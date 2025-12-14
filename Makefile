@@ -24,6 +24,10 @@ ifneq ($(resize),)
 	resize := -terser
 endif
 
+ifneq ($(debug),)
+	debug := -debug
+endif
+
 .PHONY: install uninstall publish
 
 install:
@@ -34,10 +38,8 @@ $(prefix):
 	mkdir -p $@
 
 $(prefix)/$(bundle)1: $(input) $(prebundle) | $(prefix)
-	trap 'rm -f $@.$$$$' EXIT && \
 	esbuild $(profile) --bundle --sourcemap \
-		$(define) $(extern) $< >$@.$$$$ && \
-	mv $@.$$$$ $@
+		$(define) $(extern) --outfile=$@ $<
 
 $(prefix)/$(bundle)1-terser: $(prefix)/$(bundle)1
 	terser --module --ecma 2020 \
@@ -49,10 +51,14 @@ $(prefix)/$(bundle): $(prefix)/$(bundle)1$(resize)
 	printf '\n' >>$@
 	cat $< >>$@
 
+$(prefix)/$(bundle)-debug: %-debug: %1
+	ln -f $< $@
+	ln -f $< $*
+
 $(package): $(package).in $(package-input)
 	m4 $< >$@
 
-$(prefix)/$(vsix): $(prefix)/$(bundle) $(package)
+$(prefix)/$(vsix): $(prefix)/$(bundle)$(debug) $(package)
 	vsce package --skip-license -o $@
 
 install: $(prefix)/$(vsix)
