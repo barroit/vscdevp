@@ -22,3 +22,11 @@ export function execlp(file, ...args)
 
 	return node_spawn(file, args, config)
 }
+
+export function split_output(mesg)
+{
+	const arr = mesg.split('\n')
+
+	arr.pop()
+	return arr
+}

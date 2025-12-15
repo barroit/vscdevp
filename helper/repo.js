@@ -5,26 +5,25 @@
 
 import { join } from 'node:path'
 
-import { execlp } from './exec.js'
+import { execlp, split_output } from './exec.js'
 
 export function prefix()
 {
 	const { stdout } = execlp('git', 'git',
 				  'rev-parse', '--show-toplevel', NULL)
-	const repo = stdout.slice(0, -1)
+	const lines = split_output(stdout)
 
-	return repo
+	return lines[0]
 }
 
 export function ls_files()
 {
 	const { stdout } = execlp('git', 'git', 'ls-files', '--cached',
 				  '--others', '--exclude-standard', NULL)
-	let files = stdout.slice(0, -1)
 	const repo = prefix()
 
-	files = files.split('\n')
-	files = files.map(file => join(repo, file))
+	const basenames = split_output(stdout)
+	const files = basenames.map(name => join(repo, name))
 
 	return files
 }

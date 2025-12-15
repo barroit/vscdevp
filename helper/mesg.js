@@ -20,11 +20,15 @@ function capitalize(str)
 	return out
 }
 
-export function die(mesg)
+export function die(mesg, detail)
 {
 	const ui_mesg = capitalize(mesg)
+	let option
 
-	vsc_error(ui_mesg)
+	if (detail)
+		option = { detail, modal: true }
+
+	vsc_error(ui_mesg, option)
 	throw new Error(`fatal: ${mesg}`)
 }
 
@@ -38,4 +42,11 @@ export function info(mesg)
 {
 	mesg = capitalize(mesg)
 	vsc_info(mesg)
+}
+
+export function drop_class(mesg)
+{
+	const out = mesg.replace(/^[^:]*: /, '')
+
+	return out
 }
