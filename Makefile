@@ -19,6 +19,7 @@ package-input := $(wildcard package/*.json)
 esbuild-profile := --platform=node --format=esm
 esbuild-extern  := --external:vscode
 esbuild-define  := --define:NULL=null --define:NAME='"$(name)"'
+esbuild-extra   :=
 
 ifneq ($(resize),)
 	resize := -terser
@@ -38,8 +39,8 @@ $(prefix):
 	mkdir -p $@
 
 $(prefix)/$(bundle)1: $(input) $(prebundle) | $(prefix)
-	esbuild $(esbuild-profile) --bundle --sourcemap \
-		$(esbuild-define) $(esbuild-extern) --outfile=$@ $<
+	esbuild $(esbuild-profile) --bundle --sourcemap $(esbuild-extern) \
+		$(esbuild-define) $(esbuild-extra) --outfile=$@ $<
 
 $(prefix)/$(bundle)1-terser: $(prefix)/$(bundle)1
 	terser --module --ecma 2020 \
