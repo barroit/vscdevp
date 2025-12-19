@@ -3,7 +3,19 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-export function map_ctx(ctx)
+import { workspace } from 'vscode'
+
+const { workspaceFolders: vsc_wsf_list } = workspace
+
+export function vsc_ws_prefix()
+{
+	const wsf = vsc_wsf_list[0]
+	const uri = wsf.uri
+
+	return uri.fsPath
+}
+
+export function vsc_map_ctx(ctx)
 {
 	return {
 		environ: ctx.environmentVariableCollection,

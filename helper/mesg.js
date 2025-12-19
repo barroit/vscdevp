@@ -5,20 +5,13 @@
 
 import { window } from 'vscode'
 
+import { str_cap } from './string.js'
+
 const {
 	showInformationMessage: vsc_info,
 	showErrorMessage: vsc_error,
 	showWarningMessage: vsc_warn,
 } = window
-
-function capitalize(str)
-{
-	const first = str.charAt(0)
-	const rest = str.slice(1)
-	const out = first.toUpperCase() + rest
-
-	return out
-}
 
 export function die(mesg, detail)
 {
@@ -42,11 +35,4 @@ export function info(mesg)
 {
 	mesg = capitalize(mesg)
 	vsc_info(mesg)
-}
-
-export function drop_class(mesg)
-{
-	const out = mesg.replace(/^[^:]*: /, '')
-
-	return out
 }

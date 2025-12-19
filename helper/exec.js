@@ -5,28 +5,22 @@
 
 import { spawnSync as node_spawn } from 'node:child_process'
 
-import wspath from './wspath.js'
+import { vsc_ws_prefix } from './vsc.js'
 
 export function execlp(file, ...args)
 {
 	args.pop()
 
+	const prefix = vsc_ws_prefix()
 	const arg0 = args.shift()
-	const config = {
+
+	const opt = {
 		...this,
 		argv0:    arg0,
-		cwd:      wspath,
+		cwd:      prefix,
 		encoding: 'utf8',
 		shell:    true,
 	}
 
-	return node_spawn(file, args, config)
-}
-
-export function split_output(mesg)
-{
-	const arr = mesg.split('\n')
-
-	arr.pop()
-	return arr
+	return node_spawn(file, args, opt)
 }
