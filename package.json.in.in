@@ -1,22 +1,13 @@
+dn[[]]l SPDX-License-Identifier: GPL-3.0-or-later
+dn[[]]l
 {
    "name": "NAME",
-   "displayName": "",
-   "description": "",
-   "icon": "image/negi.png",
    "type": "module",
    "version": "0.0.1",
-   "publisher": "HOLDER",
    "license": "GPL-3.0-or-later",
    "main": "build/entry.js",
    "engines": {
       "vscode": "^1.74.0"
-   },
-   "categories": [
-      "Other"
-   ],
-   "repository": {
-      "type": "git",
-      "url": "git+ssh://REMOTE"
    },
    "contributes": {
       "configuration": {
@@ -34,5 +25,16 @@ includ[[]]e(`package/menu.json')dn[[]]l
       "submenus": [
 includ[[]]e(`package/submenu.json')dn[[]]l
       ]
+   },
+   "publisher": "HOLDER",
+   "displayName": "",
+   "description": "",
+   "icon": "image/negi.png",
+   "categories": [
+      "Other"
+   ],
+   "repository": {
+      "type": "git",
+      "url": "git+ssh://REMOTE"
    }
 }
