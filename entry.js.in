@@ -3,19 +3,16 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { vsc_commands, vsc_workspace } from 'vscode'
-
-import { vsc_map_ctx } from './helper/vsc.js'
-
-const {
-	registerCommand: vsc_cmd,
-	registerTextEditorCommand: vsc_editor_cmd
-} = vsc_commands
-const { getConfiguration: vsc_fetch_config } = vsc_workspace
+import {
+	vsc_map_ctx,
+	vsc_add_cmd,
+	vsc_add_editor_cmd,
+	vsc_fetch_config,
+} from './helper/vsc.js'
 
 const cmds = {
-	'': [ import('./cmd/.js'), vsc_cmd        ],
-	'': [ import('./cmd/.js'), vsc_editor_cmd ],
+	'': [ import('./cmd/.js'), vsc_add_cmd        ],
+	'': [ import('./cmd/.js'), vsc_add_editor_cmd ],
 }
 
 function fetch_config()

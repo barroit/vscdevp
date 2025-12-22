@@ -3,9 +3,36 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { workspace as vsc_workspace } from 'vscode'
+import {
+	commands as vsc_commands,
+	window as vsc_window,
+	workspace as vsc_workspace,
+	Uri as vsc_uri,
+	WorkspaceEdit as vsc_ws_edit,
+	Position as vsc_pos,
+	Range as vsc_range,
+} from 'vscode'
 
-const { workspaceFolders: vsc_wsf_list } = vsc_workspace
+export const {
+	registerCommand: vsc_add_cmd,
+	registerTextEditorCommand: vsc_add_editor_cmd,
+	executeCommand: vsc_exec_cmd,
+} = vsc_commands
+
+export const {
+	showInformationMessage: vsc_info,
+	showErrorMessage: vsc_error,
+	showWarningMessage: vsc_warn,
+	showQuickPick: vsc_quick_pick,
+} = vsc_window
+
+export const {
+	getConfiguration: vsc_fetch_config,
+	workspaceFolders: vsc_wsf_list,
+	applyEdit: vsc_apply,
+	openTextDocument: vsc_open,
+	saveAll: vsc_save_all,
+} = vsc_workspace
 
 export function vsc_ws_prefix()
 {
@@ -44,4 +71,14 @@ export function vsc_map_ctx(ctx)
 		lm_access: ctx.languageModelAccessInformation,
 		cmds: ctx.subscriptions,
 	}
+}
+
+export {
+	vsc_commands,
+	vsc_window,
+	vsc_workspace,
+	vsc_uri,
+	vsc_ws_edit,
+	vsc_pos,
+	vsc_range,
 }
