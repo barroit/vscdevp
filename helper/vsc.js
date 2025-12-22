@@ -3,9 +3,9 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { workspace } from 'vscode'
+import { workspace as vsc_workspace } from 'vscode'
 
-const { workspaceFolders: vsc_wsf_list } = workspace
+const { workspaceFolders: vsc_wsf_list } = vsc_workspace
 
 export function vsc_ws_prefix()
 {

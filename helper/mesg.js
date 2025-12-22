@@ -3,7 +3,7 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { window } from 'vscode'
+import { window as vsc_window } from 'vscode'
 
 import { str_cap } from './string.js'
 
@@ -11,7 +11,7 @@ const {
 	showInformationMessage: vsc_info,
 	showErrorMessage: vsc_error,
 	showWarningMessage: vsc_warn,
-} = window
+} = vsc_window
 
 export function die(mesg, detail)
 {
