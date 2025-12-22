@@ -3,6 +3,7 @@
 name := $(shell head -n1 README)
 
 npm ?= pnpm
+npm-install := $(npm) i -D
 
 prefix := build
 bundle := entry.js
