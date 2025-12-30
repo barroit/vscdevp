@@ -20,7 +20,8 @@ package-input := $(wildcard package/*.json)
 esbuild-profile := --platform=node --format=esm
 esbuild-extern  := --external:vscode
 esbuild-define  := --define:NULL=null --define:NAME='"$(name)"'
-esbuild-extra   :=
+esbuild-extra   := --banner:js="import { createRequire } from 'node:module'; \
+				const require = createRequire(import.meta.url);"
 
 ifneq ($(resize),)
 	resize := -terser
