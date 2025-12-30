@@ -11,6 +11,8 @@ import {
 	WorkspaceEdit as vsc_ws_edit,
 	Position as vsc_pos,
 	Range as vsc_range,
+	ViewColumn as vsc_view_column,
+	env as vsc_env,
 } from 'vscode'
 
 export const {
@@ -24,10 +26,11 @@ export const {
 	showErrorMessage: vsc_error,
 	showWarningMessage: vsc_warn,
 	showQuickPick: vsc_quick_pick,
+	createWebviewPanel: vsc_webview_init,
+	tabGroups: vsc_tab_group,
 } = vsc_window
 
 export const {
-	getConfiguration: vsc_fetch_config,
 	workspaceFolders: vsc_wsf_list,
 	applyEdit: vsc_apply,
 	openTextDocument: vsc_open,
@@ -69,8 +72,17 @@ export function vsc_map_ctx(ctx)
 		ws_state: ctx.workspaceState,
 
 		lm_access: ctx.languageModelAccessInformation,
-		cmds: ctx.subscriptions,
+		cleanup: ctx.subscriptions,
 	}
+}
+
+export function vsc_fetch_config(key)
+{
+	const raw = vsc_workspace.getConfiguration(key)
+	const str = JSON.stringify(raw)
+	const json = JSON.parse(str)
+
+	return json
 }
 
 export {
@@ -81,4 +93,6 @@ export {
 	vsc_ws_edit,
 	vsc_pos,
 	vsc_range,
+	vsc_view_column,
+	vsc_env,
 }
