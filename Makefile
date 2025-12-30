@@ -3,7 +3,10 @@
 name := $(shell head -n1 README)
 
 npm ?= pnpm
-npm-install := $(npm) i -D
+npm += i -D
+
+m4 ?= m4
+m4 := printf 'changequote([[,]])' | $(m4) -
 
 prefix := build
 bundle := entry.js
@@ -59,7 +62,7 @@ $(prefix)/$(bundle)-debug: %-debug: %1
 	ln -f $< $*
 
 $(package): $(package).in $(package-input)
-	m4 $< >$@
+	$(m4) $< >$@
 
 $(prefix)/$(vsix): $(prefix)/$(bundle)$(debug) $(package)
 	vsce package --skip-license -o $@
