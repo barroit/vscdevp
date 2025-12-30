@@ -15,6 +15,9 @@ cp ../vscdevp/image/* image
 mkdir -p package
 cp ../vscdevp/package/* package
 
+mkdir -p .vscode
+ln -sf ../vscdevp/.vscode/* .vscode
+
 ln -sf ../vscdevp/helper
 ln -sf ../vscdevp/Makefile
 
