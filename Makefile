@@ -29,6 +29,7 @@ input := entry.js
 input += $(wildcard cmd/*.js helper/*.js $(patch-prefix)/*.js)
 
 module-prefix := node_modules
+image-prefix  := image
 
 package-in := $(wildcard package/*.json)
 package-y  := package.json
