@@ -3,49 +3,23 @@
 name := $(shell head -n1 README)
 
 npm ?= pnpm
-npm += i -D
+npm-flag ?= add -D
+npm += $(npm-flag)
 
-m4 ?= m4
-m4 := printf 'changequote([[,]])' | $(m4) -
+gm4 ?= m4
+gm4 := printf 'changequote([[, ]])' | $(gm4) -
+m4   = $(gm4) -D__filename__=$(notdir $<) -D__build__=$(syth-prefix)
 
 esbuild ?= esbuild
 esbuild += --bundle --format=esm
+esbuild += --define:NULL=null --define:NAME='"$(name)"'
 
 terser ?= terser
-terser += --module --ecma 2020
-terser += --compress 'passes=3,pure_getters=true,unsafe=true'
-terser += --mangle --comments false
+terser += --module --ecma 2020 --mangle --comments false \
+	  --compress 'passes=3,pure_getters=true,unsafe=true'
 
 prefix := build
-patch-prefix := helper.patch
-script-prefix := scripts
-
-entry-in := entry.js
-entry-y  := $(prefix)/$(entry-in)
-
-vsix-in := $(name).vsix
-vsix-y  := $(prefix)/$(vsix-in)
-
-input := entry.js
-input += $(wildcard cmd/*.js helper/*.js $(patch-prefix)/*.js)
-
-module-prefix := node_modules
-image-prefix  := image
-
-package-in := $(wildcard package/*.json)
-package-y  := package.json
-
-esbuild-define  := --define:NULL=null --define:NAME='"$(name)"'
-esbuild-require := --banner:js="import { createRequire } from 'node:module'; \
-				const require = createRequire(import.meta.url);"
-
-prebundle  :=
-prepackage :=
-
-clean-prebundle :=
-distclean-prebundle :=
-
-bundle-y := $(entry-y)
+syth-prefix := $(prefix)/m4
 
 ifneq ($(resize),)
 	resize := -terser
@@ -55,22 +29,36 @@ ifneq ($(debug),)
 	debug := -debug
 endif
 
-.PHONY: install uninstall publish
+m4-in :=
+archive-in :=
 
+bundle-y :=
+prem4    :=
+
+.PHONY: install uninstall publish
 install:
 
 -include patch.mak
 
-terser-y  := $(addsuffix 1-terser,$(bundle-y))
-debug-y   := $(addsuffix -debug,$(bundle-y))
-archive-y := $(addsuffix $(debug),$(bundle-y))
+main-in   := entry.js $(wildcard cmd/*.js helper/*.js helper.patch/*.js)
+main-m4-y := $(addprefix $(syth-prefix)/,$(main-in))
+main-y    := $(prefix)/entry.js
 
-$(prefix):
-	mkdir -p $@
+m4-in += $(main-in)
+m4-y  := $(addprefix $(syth-prefix)/,$(m4-in))
 
-$(entry-y)1: $(input) $(prebundle) | $(prefix)
-	$(esbuild) $(esbuild-define) $(esbuild-require) \
+$(m4-y): $(syth-prefix)/%: % $(prem4)
+	mkdir -p $(@D)
+	$(m4) $< >$@
+
+$(main-y)1: $(main-m4-y)
+	$(esbuild) --banner:js="import { createRequire } from 'node:module'; \
+		   		var require = createRequire(import.meta.url);" \
 		   --sourcemap --platform=node --external:vscode --outfile=$@ $<
+
+bundle-y += $(main-y)
+terser-y := $(addsuffix 1-terser,$(bundle-y))
+debug-y  := $(addsuffix -debug,$(bundle-y))
 
 $(terser-y): %1-terser: %1
 	$(terser) <$< >$@
@@ -84,27 +72,34 @@ $(debug-y): %-debug: %1
 	ln -f $< $@
 	ln -f $< $*
 
-$(package-y): $(package-y).in $(package-in)
+package-in := $(wildcard package/*.json)
+package-y  := package.json
+
+$(package-y): %: %.in $(package-in)
 	$(m4) $< >$@
 
-$(vsix-y): $(archive-y) $(package-y) $(prepackage)
+archive-in += $(addsuffix $(debug),$(bundle-y))
+archive-y  := $(prefix)/$(name).vsix
+
+$(archive-y): $(archive-in) $(package-y)
 	vsce package --skip-license -o $@
 
-install: $(vsix-y)
+install: $(archive-y)
 	code --install-extension $<
 
 uninstall:
 	code --uninstall-extension \
 	     $$(code --list-extensions | grep $(name) || printf '39\n')
 
-publish: $(vsix-y)
+publish: $(archive-y)
 	vsce publish --skip-license
 
-.PHONY: clean $(clean-prebundle) distclean $(distclean-prebundle)
+.PHONY: clean $(preclean) distclean $(predistclean)
 
-clean: $(clean-prebundle)
-	rm -f $(vsix-y) $(entry-y)*
+clean: $(preclean)
+	rm -f $(archive-y)
+	rm -f $(m4-y)
+	rm -f $(bundle-y)*
 
-distclean: clean $(distclean-prebundle)
+distclean: clean $(predistclean)
 	rm -f $(package-y)
-	rm -rf $(prefix) $(module-prefix)
