@@ -18,6 +18,7 @@ terser += --mangle --comments false
 
 prefix := build
 patch-prefix := helper.patch
+script-prefix := scripts
 
 entry-in := entry.js
 entry-y  := $(prefix)/$(entry-in)
@@ -40,6 +41,9 @@ esbuild-require := --banner:js="import { createRequire } from 'node:module'; \
 
 prebundle  :=
 prepackage :=
+
+clean-prebundle :=
+distclean-prebundle :=
 
 bundle-y := $(entry-y)
 
